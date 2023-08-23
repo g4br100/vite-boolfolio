@@ -17,10 +17,11 @@ export default {
             this.loading = true;
             axios.get('http://127.0.0.1:8000/api/projects').then(response => {
                 console.log(response.data.results);
-                this.projects = response.data.results.data;
-                console.log(this.projects)
-            this.loading = false;
-
+                this.projects = response.data.results;
+                console.log(this.projects);
+                this.loading = false;
+            }).catch(err => {
+                this.loading = false;
             })
         }
     }
@@ -30,18 +31,34 @@ export default {
 </script>
 
 <template>
-    <h1>Projects</h1>
-    <div v-if="this.loading">caricamento</div>
-    <div class="card mt-3 p-2" v-for="project in projects">
-    <h3>{{ project.title }}</h3>
-    <p>{{ project.description }}</p>
-    <p>{{ project.type.type }}</p>
-    <p v-if="project.technologies.length > 0">Tecnologie: {{project.technologies}}</p>
+    <div class="contentContainer">
+        <h1>Projects</h1>
+        <div v-if="this.loading">caricamento</div>
+    </div>
+    <div class="contentContainer d-flex flex-wrap justify-content-between">
+        <div class="card mt-3 p-2" v-for="project in projects.data">
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.description }}</p>
+            <p>Categoria: {{ project.type.type }}</p>
+            <template v-if="project.technologies.length > 0">
+                <p>Tecnologie: <span class="badge bg-primary me-2" v-for="technology in project.technologies">{{
+                    technology.name }}</span></p>
+            </template>
+        </div>
+    </div>
+    <div class="contentContainer">
+        <div class="btn btn-primary mt-4 me-2" v-for="page in projects.last_page ">{{ page }}</div>
     </div>
 </template>
 
 <style scoped>
+.contentContainer {
+    width: 1400px;
+    margin: 0 auto;
+}
 
-
-
+.card {
+    width: 330px;
+    height: 300px;
+}
 </style>
