@@ -1,6 +1,8 @@
 <script>
 
-import App_projectCard from './components/App_projectCard.vue';
+import App_projects from './components/App_projects.vue';
+import App_Header from './components/App_Header.vue';
+import App_home from './components/App_home.vue';
 import axios from 'axios'
 
 
@@ -11,7 +13,9 @@ export default {
     };
   },
   components: {
-    App_projectCard
+    App_projects,
+    App_Header,
+    App_home
   }, 
   
   }
@@ -19,7 +23,11 @@ export default {
 </script>
 
 <template>
-  <App_projectCard></App_projectCard>
+  
+  <App_Header></App_Header>
+  <router-view>
+    
+  </router-view>
 </template>
 
-<style scoped></style>
+
