@@ -1,15 +1,19 @@
 <script>
 import axios from 'axios'
 
+
 export default {
     name: 'App_projects',
+    
     data() {
         return {
-            api_path: 'http://127.0.0.1:8000/api/projects',
+            api_path: 'http://127.0.0.1:8000/api/projects/',
             loading: false,
             projects: [],
             result_Page: 0,
-            total_pages: 3,
+            
+            
+
         }
     },
     mounted() {
@@ -37,7 +41,7 @@ export default {
 
             let config = { params: { page: this.result_Page + 1 } };
 
-            if (this.result_Page < this.total_pages) {
+            if (this.result_Page < this.projects.last_page) {
                 this.loading = true;
                 axios.get('http://127.0.0.1:8000/api/projects', config).then(response => {
                     this.projects = response.data.results;
@@ -53,7 +57,7 @@ export default {
         prevPage() {
 
             let config = { params: { page: this.result_Page - 1 } };
-            if (this.result_Page > 0) {
+            if (this.result_Page > 1) {
                 this.loading = true;
                 axios.get('http://127.0.0.1:8000/api/projects', config).then(response => {
                     this.projects = response.data.results;
@@ -67,25 +71,31 @@ export default {
             }
         },
     }
-
 }
 
 </script>
 
 <template>
-    <div class="contentContainer">
-        <h1 class="mt-5">Projects</h1>
-        <div v-if="this.loading">caricamento</div>
-    </div>
-    <div class="contentContainer d-flex flex-wrap justify-content-between">
-        <div class="card mt-3 p-2" v-for="project in projects.data">
-            <h3>{{ project.title }}</h3>
-            <p>{{ project.description }}</p>
-            <p>Categoria: {{ project.type.type }}</p>
-            <template v-if="project.technologies.length > 0">
-                <p>Tecnologie: <br><span class="badge bg-primary me-2" v-for="technology in project.technologies">{{
-                    technology.name }}</span></p>
-            </template>
+    <div class="mainContainer">
+        <div class="contentContainer">
+            <h1 class="mt-5">Projects</h1>
+            <div v-if="this.loading">caricamento</div>
+        </div>
+        <div class="contentContainer d-flex flex-wrap justify-content-between">
+            <div class="card mt-3 p-2" v-for="project in projects.data">
+                <h3>
+                    
+                    <router-link :to="{name: 'project', params:{id: project.id}}">
+                        {{ project.title }}
+                    </router-link>
+                </h3>
+                <p>{{ project.description }}</p>
+                <p>Categoria: {{ project.type.type }}</p>
+                <template v-if="project.technologies.length > 0">
+                    <p>Tecnologie: <br><span class="badge bg-primary me-2" v-for="technology in project.technologies">{{
+                        technology.name }}</span></p>
+                </template>
+            </div>
         </div>
     </div>
     <div class="contentContainer">
@@ -97,6 +107,10 @@ export default {
 </template>
 
 <style scoped>
+.mainContainer {
+    min-height: 500px;
+}
+
 .contentContainer {
     width: 1400px;
     margin: 0 auto;
@@ -105,5 +119,10 @@ export default {
 .card {
     width: 250px;
     min-height: 250px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
 }
 </style>
